@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/content_quote"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <android.support.v7.widget.LinearLayoutCompat
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <android.support.v7.widget.AppCompatEditText
+      android:id="@+id/quote"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:hint="@string/write_a_quote"
+      tools:text="qdcndjscms"/>
+
+    <android.support.v7.widget.AppCompatButton
+      android:id="@+id/submit_btn"
+      style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="0.5"
+      android:onClick="addQuote"
+      android:text="@string/submit"/>
+  </android.support.v7.widget.LinearLayoutCompat>
+</android.support.v7.widget.LinearLayoutCompat>

@@ -1,0 +1,13 @@
+<resources>
+  <string name="app_name">My Application</string>
+  <string name="write_a_quote">Write a quote</string>
+  <string name="submit">submit</string>
+
+  <string-array name="quote_array">
+    <item>Quote 1</item>
+    <item>Quote 2</item>
+    <item>Quote 3</item>
+    <item>Quote 4</item>
+    <item>Quote 5</item>
+  </string-array>
+</resources>
