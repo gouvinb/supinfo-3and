@@ -1,17 +1,15 @@
 package com.supinfo.gouvinb.myapplication;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.supinfo.gouvinb.myapplication.adapter.QuoteListAdapter;
 import com.supinfo.gouvinb.myapplication.model.Quote;
 
 import java.util.ArrayList;
@@ -20,9 +18,10 @@ public class QuoteListActivity extends AppCompatActivity {
 
   private static final String TAG = "QuoteListActivity";
 
-  private AppCompatButton submitButton;
   private AppCompatEditText quoteEditText;
-  private LinearLayoutCompat contentQuoteLinearLayout;
+  private ListView maListView;
+
+  private QuoteListAdapter<Quote> quoteListAdapter;
 
   private ArrayList<Quote> quoteArrayList = new ArrayList<>();
 
@@ -31,9 +30,22 @@ public class QuoteListActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    submitButton = (AppCompatButton) findViewById(R.id.submit_btn);
     quoteEditText = (AppCompatEditText) findViewById(R.id.quote);
-    contentQuoteLinearLayout = (LinearLayoutCompat) findViewById(R.id.content_quote);
+    maListView = (ListView) findViewById(R.id.ma_list_view);
+    maListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Toast.makeText(getBaseContext(), "Quote a la position " + position, Toast.LENGTH_SHORT).show();
+      }
+    });
+
+    quoteListAdapter = new QuoteListAdapter<>(
+        this,
+        R.layout.simple_list_item,
+        quoteArrayList
+    );
+
+    maListView.setAdapter(quoteListAdapter);
 
     String[] stringArray = getResources().getStringArray(R.array.quote_array);
     for (String strQuote : stringArray) {
@@ -50,22 +62,10 @@ public class QuoteListActivity extends AppCompatActivity {
   }
 
   private void addQuote(String strQuote) {
-    quoteArrayList.add(new Quote(strQuote));
-    TextView quoteView = new TextView(this);
-    quoteView.setText(strQuote);
-    if (quoteArrayList.size() % 2 == 0) {
-      quoteView.setBackgroundColor(Color.LTGRAY);
-    }
-    contentQuoteLinearLayout.addView(quoteView);
+    quoteListAdapter.add(new Quote(strQuote));
+    maListView.invalidate();
+
   }
-
-
-
-
-
-
-
-
 
 
   public void addQuote(View view) {
@@ -73,7 +73,7 @@ public class QuoteListActivity extends AppCompatActivity {
     if (!strQuote.equals("")) {
       addQuote(strQuote);
     } else {
-      Toast.makeText(this, "No text No action", Toast.LENGTH_LONG).show();
+      Toast.makeText(this, "No text No action", Toast.LENGTH_SHORT).show();
     }
   }
 }

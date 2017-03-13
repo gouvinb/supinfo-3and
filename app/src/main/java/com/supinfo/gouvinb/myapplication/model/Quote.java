@@ -38,10 +38,11 @@ public class Quote {
 
   @Override
   public String toString() {
-    return "Quote{" +
-        "strQuote='" + strQuote + '\'' +
-        ", rating=" + rating +
-        ", dateField='" + dateField + '\'' +
-        '}';
+    return strQuote;
+//    return "Quote{" +
+//        "strQuote='" + strQuote + '\'' +
+//        ", rating=" + rating +
+//        ", dateField='" + dateField + '\'' +
+//        '}';
   }
 }
