@@ -1,7 +1,13 @@
 package com.supinfo.gouvinb.myapplication;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
@@ -16,6 +22,7 @@ import com.supinfo.gouvinb.myapplication.adapter.QuoteListAdapter;
 import com.supinfo.gouvinb.myapplication.model.Quote;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class QuoteListActivity extends AppCompatActivity {
 
@@ -28,12 +35,15 @@ public class QuoteListActivity extends AppCompatActivity {
   private QuoteListAdapter<Quote> quoteListAdapter;
 
   private ArrayList<Quote> quoteArrayList = new ArrayList<>();
+  private int NOTIFICATION = 0;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    sendNotification();
+    
     quoteEditText = (AppCompatEditText) findViewById(R.id.quote);
     maListView = (ListView) findViewById(R.id.ma_list_view);
     maListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -78,6 +88,26 @@ public class QuoteListActivity extends AppCompatActivity {
         Log.d(TAG, quote.toString());
       }
     }
+  }
+
+  private void sendNotification() {
+    int icon= android.R.drawable.ic_dialog_alert;
+    String title = "Coucou je suis un titre";
+    String content = "lorem";
+
+    Intent notificationIntent = new Intent(getApplicationContext(), QuoteListActivity.class);
+    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
+        NOTIFICATION, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    Notification.Builder builder = new Notification.Builder(getApplicationContext());
+    builder.setContentTitle(title)
+        .setSmallIcon(icon)
+        .setContentIntent(pendingIntent)
+        .setContentText(content)
+        .setColor(Color.RED);
+    Notification notification = builder.build();
+    NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    notificationManager.notify(NOTIFICATION, notification);
   }
 
   @Override
