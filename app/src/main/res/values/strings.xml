@@ -10,4 +10,5 @@
     <item>Quote 4</item>
     <item>Quote 5</item>
   </string-array>
+  <string name="title_activity_quote">QuoteActivity</string>
 </resources>

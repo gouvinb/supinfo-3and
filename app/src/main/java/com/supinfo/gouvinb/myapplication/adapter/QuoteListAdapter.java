@@ -2,10 +2,12 @@ package com.supinfo.gouvinb.myapplication.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.supinfo.gouvinb.myapplication.R;
@@ -59,6 +61,15 @@ public class QuoteListAdapter<T> extends BaseAdapter {
       convertView.setBackgroundColor(Color.WHITE);
     }
 
+    RatingBar rateQuoteView = (RatingBar) convertView.findViewById(R.id.rating_quote);
+    rateQuoteView.setRating(quoteList.get(position).getRating());
+
+    if (position % 2 == 0) {
+      convertView.setBackgroundColor(Color.parseColor("#44AA0000"));
+    } else {
+      convertView.setBackgroundColor(Color.WHITE);
+    }
+
     return convertView;
   }
 
@@ -66,4 +77,19 @@ public class QuoteListAdapter<T> extends BaseAdapter {
     quoteList.add(quote);
     notifyDataSetChanged();
   }
+
+  public void update(int pos, int rating) {
+    quoteList.get(pos).setRating(rating);
+    Log.i("TAG", "update: " + rating);
+    notifyDataSetChanged();
+  }
 }
+
+
+
+
+
+
+
+
+

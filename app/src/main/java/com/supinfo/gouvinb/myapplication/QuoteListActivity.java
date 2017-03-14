@@ -1,9 +1,12 @@
 package com.supinfo.gouvinb.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -17,6 +20,7 @@ import java.util.ArrayList;
 public class QuoteListActivity extends AppCompatActivity {
 
   private static final String TAG = "QuoteListActivity";
+  private static final int RATE_QUOTE = 1;
 
   private AppCompatEditText quoteEditText;
   private ListView maListView;
@@ -35,7 +39,13 @@ public class QuoteListActivity extends AppCompatActivity {
     maListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(getBaseContext(), "Quote a la position " + position, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(QuoteListActivity.this, QuoteActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt(QuoteActivity.QUOTE_POSITION, position);
+        bundle.putString(QuoteActivity.QUOTE_STR, quoteArrayList.get(position).getStrQuote());
+        bundle.putInt(QuoteActivity.QUOTE_RATING, quoteArrayList.get(position).getRating());
+        intent.putExtras(bundle);
+        startActivityForResult(intent, RATE_QUOTE);
       }
     });
 
@@ -59,6 +69,33 @@ public class QuoteListActivity extends AppCompatActivity {
         Log.d(TAG, quote.toString());
       }
     }
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == RATE_QUOTE) {
+      if (resultCode == RESULT_OK) {
+        quoteListAdapter.update(
+            data.getExtras().getInt(QuoteActivity.QUOTE_POSITION),
+            data.getExtras().getInt(QuoteActivity.QUOTE_RATING));
+        maListView.invalidate();
+      }
+    }
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.menu, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.retour) {
+      finish();
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   private void addQuote(String strQuote) {
