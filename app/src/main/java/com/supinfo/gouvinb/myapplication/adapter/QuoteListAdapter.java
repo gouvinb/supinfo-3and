@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.supinfo.gouvinb.myapplication.R;
 import com.supinfo.gouvinb.myapplication.model.Quote;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -80,7 +81,15 @@ public class QuoteListAdapter<T> extends BaseAdapter {
 
   public void update(int pos, int rating) {
     quoteList.get(pos).setRating(rating);
+    quoteList.get(pos).setDateField(Calendar.getInstance().getTime().toString());
     Log.i("TAG", "update: " + rating);
+    notifyDataSetChanged();
+  }
+
+  public void update(int pos, String quoteStr) {
+    quoteList.get(pos).setStrQuote(quoteStr);
+    quoteList.get(pos).setDateField(Calendar.getInstance().getTime().toString());
+    Log.i("TAG", "update: " + quoteStr);
     notifyDataSetChanged();
   }
 }

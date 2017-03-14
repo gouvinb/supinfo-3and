@@ -1,13 +1,7 @@
 package com.supinfo.gouvinb.myapplication;
 
-import android.content.Intent;
-import android.icu.math.BigDecimal;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
@@ -15,12 +9,10 @@ import android.widget.TextView;
 
 public class QuoteActivity extends AppCompatActivity {
 
-  private static final String TAG = "QuoteActivity";
-
   public static final String QUOTE_POSITION = "QUOTE_POSITION";
   public static final String QUOTE_STR = "QUOTE_STR";
   public static final String QUOTE_RATING = "QUOTE_RATING";
-
+  private static final String TAG = "QuoteActivity";
   private TextView textView;
   private RatingBar ratingBar;
   private Button button;
@@ -52,9 +44,4 @@ public class QuoteActivity extends AppCompatActivity {
       ratingBar.setRating(getIntent().getExtras().getInt(QUOTE_RATING));
     }
   }
-
 }
-
-
-
-

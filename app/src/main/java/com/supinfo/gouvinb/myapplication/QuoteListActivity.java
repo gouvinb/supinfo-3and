@@ -48,6 +48,15 @@ public class QuoteListActivity extends AppCompatActivity {
         startActivityForResult(intent, RATE_QUOTE);
       }
     });
+    maListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+      @Override
+      public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        EditQuoteDialog
+            .newInstance(position, quoteArrayList.get(position).getStrQuote())
+            .show(getSupportFragmentManager(), "Edit Quote");
+        return true;
+      }
+    });
 
     quoteListAdapter = new QuoteListAdapter<>(
         this,
@@ -112,6 +121,11 @@ public class QuoteListActivity extends AppCompatActivity {
     } else {
       Toast.makeText(this, "No text No action", Toast.LENGTH_SHORT).show();
     }
+  }
+
+  public void updateQuote(int pos, String quoteStr) {
+    quoteListAdapter.update(pos, quoteStr);
+    maListView.invalidate();
   }
 }
 
