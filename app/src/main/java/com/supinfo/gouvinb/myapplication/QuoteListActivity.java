@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -169,7 +170,8 @@ public class QuoteListActivity extends AppCompatActivity {
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.retour) {
-      finish();
+      MyAsyncTask myAsyncTask = new MyAsyncTask();
+      myAsyncTask.execute();
     }
     return super.onOptionsItemSelected(item);
   }
