@@ -4,13 +4,13 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatEditText;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,9 +20,10 @@ import android.widget.Toast;
 
 import com.supinfo.gouvinb.myapplication.adapter.QuoteListAdapter;
 import com.supinfo.gouvinb.myapplication.model.Quote;
+import com.supinfo.gouvinb.myapplication.model.Quote.QuoteEntry;
+import com.supinfo.gouvinb.myapplication.sqlite.QuoteDbHelper;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class QuoteListActivity extends AppCompatActivity {
 
@@ -43,7 +44,9 @@ public class QuoteListActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     sendNotification();
-    
+
+    getPersistedData();
+
     quoteEditText = (AppCompatEditText) findViewById(R.id.quote);
     maListView = (ListView) findViewById(R.id.ma_list_view);
     maListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -83,15 +86,42 @@ public class QuoteListActivity extends AppCompatActivity {
 
     addQuote("quote added with java");
 
-    if (BuildConfig.DEBUG) {
-      for (Quote quote : quoteArrayList) {
-        Log.d(TAG, quote.toString());
-      }
+
+  }
+
+  private void getPersistedData() {
+    SQLiteDatabase sqLiteDatabase =
+        new QuoteDbHelper(getApplicationContext()).getReadableDatabase();
+
+    String[] quoteField = {
+        QuoteEntry.COLUMN_NAME_QUOTE,
+        QuoteEntry.COLUMN_NAME_RATING,
+        QuoteEntry.COLUMN_NAME_DATE,
+    };
+
+    Cursor quoteEntry = sqLiteDatabase.query(
+        QuoteEntry.TABLE_NAME,
+        quoteField,
+        null,
+        null,
+        null,
+        null,
+        null
+    );
+
+    while (quoteEntry.moveToNext()) {
+      Quote quote = new Quote(quoteEntry.getString(quoteEntry.getColumnIndex(quoteField[0])));
+      quote.setRating(quoteEntry.getInt(quoteEntry.getColumnIndex(quoteField[1])));
+      quote.setDateField(quoteEntry.getString(quoteEntry.getColumnIndex(quoteField[2])));
+      quoteArrayList.add(quote);
     }
+
+    quoteEntry.close();
+    sqLiteDatabase.close();
   }
 
   private void sendNotification() {
-    int icon= android.R.drawable.ic_dialog_alert;
+    int icon = android.R.drawable.ic_dialog_alert;
     String title = "Coucou je suis un titre";
     String content = "lorem";
 
@@ -100,11 +130,18 @@ public class QuoteListActivity extends AppCompatActivity {
         NOTIFICATION, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
     Notification.Builder builder = new Notification.Builder(getApplicationContext());
-    builder.setContentTitle(title)
-        .setSmallIcon(icon)
-        .setContentIntent(pendingIntent)
-        .setContentText(content)
-        .setColor(Color.RED);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      builder.setContentTitle(title)
+          .setSmallIcon(icon)
+          .setContentIntent(pendingIntent)
+          .setContentText(content)
+          .setColor(Color.RED);
+    } else {
+      builder.setContentTitle(title)
+          .setSmallIcon(icon)
+          .setContentIntent(pendingIntent)
+          .setContentText(content);
+    }
     Notification notification = builder.build();
     NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     notificationManager.notify(NOTIFICATION, notification);
@@ -137,13 +174,6 @@ public class QuoteListActivity extends AppCompatActivity {
     return super.onOptionsItemSelected(item);
   }
 
-  private void addQuote(String strQuote) {
-    quoteListAdapter.add(new Quote(strQuote));
-    maListView.invalidate();
-
-  }
-
-
   public void addQuote(View view) {
     String strQuote = quoteEditText.getText().toString();
     if (!strQuote.equals("")) {
@@ -152,6 +182,13 @@ public class QuoteListActivity extends AppCompatActivity {
       Toast.makeText(this, "No text No action", Toast.LENGTH_SHORT).show();
     }
   }
+
+  private void addQuote(String strQuote) {
+    quoteListAdapter.add(new Quote(strQuote));
+    maListView.invalidate();
+
+  }
+
 
   public void updateQuote(int pos, String quoteStr) {
     quoteListAdapter.update(pos, quoteStr);

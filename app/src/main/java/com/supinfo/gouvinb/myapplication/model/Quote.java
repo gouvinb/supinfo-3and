@@ -1,9 +1,12 @@
 package com.supinfo.gouvinb.myapplication.model;
 
+import android.provider.BaseColumns;
+
 import java.util.Calendar;
 import java.util.Locale;
 
 public class Quote {
+
   private String strQuote = "";
   private Integer rating = 0;
   private String dateField = Calendar.getInstance(Locale.getDefault()).getTime().toString();
@@ -39,10 +42,18 @@ public class Quote {
   @Override
   public String toString() {
     return strQuote;
-//    return "Quote{" +
-//        "strQuote='" + strQuote + '\'' +
-//        ", rating=" + rating +
-//        ", dateField='" + dateField + '\'' +
-//        '}';
   }
+
+  public static class QuoteEntry implements BaseColumns {
+    public static final String TABLE_NAME = "quote";
+    public static final String COLUMN_NAME_QUOTE = "quote";
+    public static final String COLUMN_NAME_RATING = "rating";
+    public static final String COLUMN_NAME_DATE = "date";
+  }
+
+
+
+
+
+
 }
